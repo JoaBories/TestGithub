@@ -47,7 +47,6 @@ public class PlayerMovements : MonoBehaviour
         }
     }
 
-
     void Update()
     {
         if (isOnGround()) canJump = true;
