@@ -7,9 +7,13 @@ public class PlayerMovements : MonoBehaviour
 {
     [SerializeField] private float Speed;
     [SerializeField] private float jumpSpeed;
+    [SerializeField] private GameObject isOnGroundTrigger;
 
     private Controls _inputActions;
     private InputAction _moveActions;
+
+    private bool isMoving;
+    private bool canJump;
 
 
     private void Awake()
@@ -36,13 +40,24 @@ public class PlayerMovements : MonoBehaviour
 
     private void jump(InputAction.CallbackContext context)
     {
-        GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jumpSpeed);
+        if (canJump && isOnGround())
+        {
+            GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jumpSpeed);
+            canJump = false;
+        }
     }
 
 
     void Update()
     {
+        if (isOnGround()) canJump = true;
+
         float moveDir = _moveActions.ReadValue<Vector2>().x;
         transform.position += new Vector3(moveDir * Speed * Time.deltaTime, 0, 0);
+    }
+
+    private bool isOnGround()
+    {
+        return isOnGroundTrigger.GetComponent<IsOnGroundTrigger>().IsGround;
     }
 }
