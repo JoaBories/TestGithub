@@ -14,7 +14,8 @@ public class PlayerMovements : MonoBehaviour
 
     private bool isMoving;
     private bool canJump;
-
+    public bool inAir;
+    bool goingdown;
 
     private void Awake()
     {
@@ -40,16 +41,24 @@ public class PlayerMovements : MonoBehaviour
 
     private void jump(InputAction.CallbackContext context)
     {
-        if (canJump && isOnGround())
+        if (canJump && Mathf.Abs(GetComponent<Rigidbody2D>().velocity.y) <= 0.1f)
         {
-            GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jumpSpeed);
             canJump = false;
+            GetComponent<Animator>().Play("playerJumpStart");
+            StartCoroutine(delayJump(0.2f));
         }
     }
 
     void Update()
     {
-        if (isOnGround()) canJump = true;
+        if (inAir && Mathf.Abs(GetComponent<Rigidbody2D>().velocity.y) <= 0.1f)
+        {
+            inAir = false;
+            GetComponent<Animator>().Play("playerJumpEnd");
+        }
+        if (Mathf.Abs(GetComponent<Rigidbody2D>().velocity.y) <= 0.1f) canJump = true;
+
+        if (Mathf.Abs(GetComponent<Rigidbody2D>().velocity.y) <= 0.1f) inAir = false;
 
         float moveDir = _moveActions.ReadValue<Vector2>().x;
         if (moveDir < 0)
@@ -70,6 +79,17 @@ public class PlayerMovements : MonoBehaviour
     private bool isOnGround()
     {
         return isOnGroundTrigger.GetComponent<IsOnGroundTrigger>().IsGround;
+    }
+
+    public void setAir()
+    {
+        inAir = true;
+    }
+
+    IEnumerator delayJump(float time)
+    {
+        yield return new WaitForSeconds(time);
+        GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, jumpSpeed);
     }
 
     IEnumerator timetodestroy(float time, GameObject objectToDestroy)
