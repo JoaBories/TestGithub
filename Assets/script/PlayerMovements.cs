@@ -83,7 +83,7 @@ public class PlayerMovements : MonoBehaviour
         if (collision.CompareTag("collectible"))
         {
             GetComponent<Animator>().Play("playerEat");
-            StartCoroutine(timetodestroy(0.5f, collision.gameObject));
+            StartCoroutine(timetodestroy(0.3f, collision.gameObject));
         }
     }
 }
