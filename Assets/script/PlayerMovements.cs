@@ -52,6 +52,18 @@ public class PlayerMovements : MonoBehaviour
         if (isOnGround()) canJump = true;
 
         float moveDir = _moveActions.ReadValue<Vector2>().x;
+        if (moveDir < 0)
+        {
+            GetComponent<SpriteRenderer>().flipX = true;
+            isMoving = true;
+        }
+        else if (moveDir == 0) isMoving = false;
+        else
+        {
+            GetComponent<SpriteRenderer>().flipX = false;
+            isMoving =true;
+        }
+
         transform.position += new Vector3(moveDir * Speed * Time.deltaTime, 0, 0);
     }
 
