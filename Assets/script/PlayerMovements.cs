@@ -71,4 +71,19 @@ public class PlayerMovements : MonoBehaviour
     {
         return isOnGroundTrigger.GetComponent<IsOnGroundTrigger>().IsGround;
     }
+
+    IEnumerator timetodestroy(float time, GameObject objectToDestroy)
+    {
+        yield return new WaitForSeconds(time);
+        Destroy(objectToDestroy);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("collectible"))
+        {
+            GetComponent<Animator>().Play("playerEat");
+            StartCoroutine(timetodestroy(0.5f, collision.gameObject));
+        }
+    }
 }
