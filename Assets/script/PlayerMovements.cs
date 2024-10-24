@@ -45,7 +45,7 @@ public class PlayerMovements : MonoBehaviour
         {
             canJump = false;
             GetComponent<Animator>().Play("playerJumpStart");
-            StartCoroutine(delayJump(0.2f));
+            StartCoroutine(delayJump(0.8f));
         }
     }
 
